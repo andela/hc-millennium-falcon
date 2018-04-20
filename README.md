@@ -28,8 +28,7 @@ in development environment.
         $ mkdir -p ~/webapps
         $ cd ~/webapps
 
-* prepare virtual environment
-  (with virtualenv you get pip, we'll use it soon to install requirements):
+* prepare virtual environment (with virtualenv you get pip, we'll use it soon to install requirements):
 
         $ virtualenv --python=python3 hc-venv
         $ source hc-venv/bin/activate
