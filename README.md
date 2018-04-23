@@ -16,7 +16,7 @@ The building blocks are:
 
 * Python 2 or Python 3
 * Django 1.10
-* PostgreSQL or MySQL
+* PostgreSQL
 
 ## Setting Up for Development
 
