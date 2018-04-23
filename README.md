@@ -16,7 +16,7 @@ The building blocks are:
 
 * Python 2 or Python 3
 * Django 1.10
-* PostgreSQL or MySQL
+* PostgreSQL
 
 ## Setting Up for Development
 
@@ -79,19 +79,6 @@ following in it, changing it as neccessary:
     DATABASES = {
         'default': {
             'ENGINE':   'django.db.backends.postgresql',
-            'NAME':     'your-database-name-here',
-            'USER':     'your-database-user-here',
-            'HOST':     'your-local-server-here',
-            'PASSWORD': 'your-database-password-here',
-            'TEST': {'CHARSET': 'UTF8'}
-        }
-    }
-
-For MySQL:
-
-    DATABASES = {
-        'default': {
-            'ENGINE':   'django.db.backends.mysql',
             'NAME':     'your-database-name-here',
             'USER':     'your-database-user-here',
             'HOST':     'your-local-server-here',
