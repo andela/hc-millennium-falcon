@@ -7,3 +7,8 @@ static-collected
 
 .DS_Store
 static/.DS_Store
+
+hc-venv/
+hc/.local_settings
+
+.vscode
