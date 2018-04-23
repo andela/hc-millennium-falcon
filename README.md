@@ -188,3 +188,4 @@ To enable Pushover integration, you will need to:
   subscription type
 * add the application token and subscription URL to `hc/local_settings.py`, as
   `PUSHOVER_API_TOKEN` and `PUSHOVER_SUBSCRIPTION_URL`
+  
