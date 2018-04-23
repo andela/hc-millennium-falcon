@@ -96,6 +96,7 @@ if os.environ.get("DB") == "postgres":
             'ENGINE':   'django.db.backends.postgresql',
             'NAME':     'hc',
             'USER':     'postgres',
+            'HOST': 'localhost',# Added this to be able to connect to local host
             'TEST': {'CHARSET': 'UTF8'}
         }
     }
@@ -133,7 +134,7 @@ STATICFILES_FINDERS = (
 )
 COMPRESS_OFFLINE = True
 
-EMAIL_BACKEND = "djmail.backends.default.EmailBackend"
+EMAIL_BACKEND = "django.core.mail.backends"
 
 # Slack integration -- override these in local_settings
 SLACK_CLIENT_ID = None
