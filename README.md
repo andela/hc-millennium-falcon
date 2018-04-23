@@ -10,13 +10,13 @@
 
 healthchecks is a watchdog for your cron jobs. It's a web server that listens for pings from your cron jobs, plus a web interface.
 
-It is live here: [http://healthchecks.io/](http://healthchecks.io/)
+It is live here: [#](#)
 
 The building blocks are:
 
 * Python 2 or Python 3
-* Django 1.9
-* PostgreSQL or MySQL
+* Django 1.10
+* PostgreSQL
 
 ## Setting Up for Development
 
@@ -28,29 +28,35 @@ in development environment.
         $ mkdir -p ~/webapps
         $ cd ~/webapps
 
-* prepare virtual environment
-  (with virtualenv you get pip, we'll use it soon to install requirements):
+* prepare virtual environment (with virtualenv you get pip, we'll use it soon to install requirements):
 
         $ virtualenv --python=python3 hc-venv
         $ source hc-venv/bin/activate
 
 * check out project code:
 
-        $ git clone https://github.com/healthchecks/healthchecks.git
+        $ git clone https://github.com/andela/hc-millennium-falcon.git
+
+* change directory to the project folder:
+
+        $ cd hc-millennium-falcon
 
 * install requirements (Django, ...) into virtualenv:
 
-        $ pip install -r healthchecks/requirements.txt
+        $ pip install -r requirements.txt
 
-* make sure PostgreSQL server is installed and running, create
-  database "hc":
+* make sure PostgreSQL server is installed and running, create database "hc":
 
-        $ psql --user postgres
+        $ sudo su - postgres
+        $ psql
         postgres=# create database hc;
+
+* set DB environment
+
+        $ export DB=postgres
 
 * create database tables, triggers, superuser:
 
-        $ cd ~/webapps/healthchecks
         $ ./manage.py migrate
         $ ./manage.py ensuretriggers
         $ ./manage.py createsuperuser
@@ -59,9 +65,9 @@ in development environment.
 
         $ ./manage.py runserver
 
-The site should now be running at `http://localhost:8080`
+The site should now be running at `http://localhost:8000`
 To log into Django administration site as a super user,
-visit `http://localhost:8080/admin`
+visit `http://localhost:8000/admin`
 
 ## Database Configuration
 
@@ -75,18 +81,7 @@ following in it, changing it as neccessary:
             'ENGINE':   'django.db.backends.postgresql',
             'NAME':     'your-database-name-here',
             'USER':     'your-database-user-here',
-            'PASSWORD': 'your-database-password-here',
-            'TEST': {'CHARSET': 'UTF8'}
-        }
-    }
-
-For MySQL:
-
-    DATABASES = {
-        'default': {
-            'ENGINE':   'django.db.backends.mysql',
-            'NAME':     'your-database-name-here',
-            'USER':     'your-database-user-here',
+            'HOST':     'your-local-server-here',
             'PASSWORD': 'your-database-password-here',
             'TEST': {'CHARSET': 'UTF8'}
         }
@@ -102,6 +97,7 @@ configuration from environment variables like so:
             'ENGINE':   os.env['DB_ENGINE'],
             'NAME':     os.env['DB_NAME'],
             'USER':     os.env['DB_USER'],
+            'DB':       os.env['DB'],
             'PASSWORD': os.env['DB_PASSWORD'],
             'TEST': {'CHARSET': 'UTF8'}
         }
@@ -111,21 +107,19 @@ configuration from environment variables like so:
 
 ## Sending Emails
 
-healthchecks must be able to send email messages, so it can send out login
-links and alerts to users. You will likely need to tweak email configuration
-before emails will work. healthchecks uses
-[djmail](http://bameda.github.io/djmail/) for sending emails asynchronously.
-Djmail is a BSD Licensed, simple and nonobstructive django email middleware.
-It can be configured to use any regular Django email backend behind the
-scenes. For example, the healthchecks.io site uses
-[django-ses-backend](https://github.com/piotrbulinski/django-ses-backend/)
-and the email configuration in `hc/local_settings.py` looks as follows:
+Use [sendgrid](http://app.sendgrid.com), set up an account and generate an API key.
+Take a look at [how to set up sendgrid with Django](https://sendgrid.com/docs/Integrate/Frameworks/django.html)
 
-    DJMAIL_REAL_BACKEND = 'django_ses_backend.SESBackend'
-    AWS_SES_ACCESS_KEY_ID = "put-access-key-here"
-    AWS_SES_SECRET_ACCESS_KEY = "put-secret-access-key-here"
-    AWS_SES_REGION_NAME = 'us-east-1'
-    AWS_SES_REGION_ENDPOINT = 'email.us-east-1.amazonaws.com'
+healthchecks must be able to send email messages, so it can send out login
+links and alerts to users. You will likely need to tweak email configuration 
+in `hc/local_settings.py` before emails work:
+
+    EMAIL_HOST = 'smtp.sendgrid.net'
+    EMAIL_HOST_USER = '<sendgrid_username>'
+    EMAIL_HOST_PASSWORD = '<sendgrid_api_key>'
+    EMAIL_PORT = 587
+    EMAIL_USE_TLS = True
+    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 
 ## Sending Status Notifications
 
@@ -194,3 +188,4 @@ To enable Pushover integration, you will need to:
   subscription type
 * add the application token and subscription URL to `hc/local_settings.py`, as
   `PUSHOVER_API_TOKEN` and `PUSHOVER_SUBSCRIPTION_URL`
+  
