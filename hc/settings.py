@@ -141,9 +141,13 @@ STATICFILES_FINDERS = (
 )
 COMPRESS_OFFLINE = True
 
+<<<<<<< 0b231288a32683e356fdf5f6b473c06f03ff6d91
 EMAIL_BACKEND = "sendgrid_backend.SendgridBackend"
 SENDGRID_API_KEY = os.environ.get("SENDGRID_API_KEY")
 SENDGRID_SANDBOX_MODE_IN_DEBUG = False
+=======
+EMAIL_BACKEND = "django.core.mail.backends"
+>>>>>>> #156577915 Fix API Tests (#5)
 
 # Slack integration -- override these in local_settings
 SLACK_CLIENT_ID = None
