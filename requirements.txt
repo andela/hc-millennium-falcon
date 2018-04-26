@@ -29,11 +29,7 @@ requests==2.18.4
 rjsmin==1.0.12
 six==1.11.0
 urllib3==1.22
-<<<<<<< 0b231288a32683e356fdf5f6b473c06f03ff6d91
 python-dateutil==2.7.2
 waitress==1.1.0
 whitenoise==3.3.1
-=======
 mock==2.0
-python-dateutil==2.7.2
->>>>>>> #156577915 Fix API Tests (#5)

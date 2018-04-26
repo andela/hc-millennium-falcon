@@ -1,5 +1,9 @@
 language: python
 python:
+<<<<<<< 1299acd8780705d462cc5b6cf3454bcbc29cf0a7
+=======
+  - "2.7"
+>>>>>>> chore(setup): Fix continuous Integration with circleci and codeclimate (#7)
   - "3.6.1"
 install:
     - pip install -r requirements.txt
