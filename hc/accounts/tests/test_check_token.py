@@ -1,6 +1,6 @@
 from django.contrib.auth.hashers import make_password
 from hc.test import BaseTestCase
-
+from django.urls import reverse
 
 class CheckTokenTestCase(BaseTestCase):
 
@@ -21,8 +21,16 @@ class CheckTokenTestCase(BaseTestCase):
         self.profile.refresh_from_db()
         self.assertEqual(self.profile.token, "")
 
-    ### Login and test it redirects already logged in
+    def test_redirect_on_login(self):
+        """test if page redirects if registered user retries to login"""        
+        url = reverse('hc-check-token', args=['alice', 'secret-token'])
+        response = self.client.post(url)
+        self.assertRedirects(response, "/checks/")
 
-    ### Login with a bad token and check that it redirects
+        newurl = self.client.post(url)
+        self.assertRedirects(newurl, '/checks/')
 
-    ### Any other tests?
+    def test_redirect_on_bad_token(self):
+        """test if page redirects on login with bad token"""
+        token = self.client.post('/accounts/check_token/alice/invalid-token/')
+        self.assertRedirects(token, '/accounts/login/')
