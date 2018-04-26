@@ -1,5 +1,9 @@
 # healthchecks
 
+[![Build Status](https://travis-ci.org/andela/hc-millennium-falcon.svg?branch=develop)](https://travis-ci.org/andela/hc-millennium-falcon)
+[![Maintainability](https://api.codeclimate.com/v1/badges/dbdfe3692a78d2c8b999/maintainability)](https://codeclimate.com/github/andela/hc-millennium-falcon/maintainability)
+[![Coverage Status](https://coveralls.io/repos/github/andela/hc-millennium-falcon/badge.svg?branch=develop)](https://coveralls.io/github/andela/hc-millennium-falcon?branch=develop)
+
 ![Screenshot of Welcome page](/stuff/screenshots/welcome.png?raw=true "Welcome Page")
 
 ![Screenshot of My Checks page](/stuff/screenshots/my_checks.png?raw=true "My Checks Page")
@@ -191,5 +195,4 @@ To enable Pushover integration, you will need to:
 * enable subscriptions in your application and make sure to enable the URL
   subscription type
 * add the application token and subscription URL to `hc/local_settings.py`, as
-  `PUSHOVER_API_TOKEN` and `PUSHOVER_SUBSCRIPTION_URL`
-  
+  `PUSHOVER_API_TOKEN` and `PUSHOVER_SUBSCRIPTION_URL`  
