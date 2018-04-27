@@ -1,4 +1,5 @@
 __pycache__/
+.pytest_cache/
 *.pyc
 .coverage
 hc.sqlite
@@ -7,8 +8,9 @@ static-collected
 
 .DS_Store
 static/.DS_Store
-
 hc-venv/
-hc/.local_settings
 
 .vscode
+.idea/
+
+migrations
