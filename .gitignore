@@ -1,4 +1,5 @@
 __pycache__/
+.pytest_cache/
 *.pyc
 .coverage
 hc.sqlite
@@ -12,4 +13,4 @@ hc-venv/
 .vscode
 .idea/
 
-
+migrations
