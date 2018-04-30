@@ -9,6 +9,7 @@ def _pg(cursor):
         BEGIN
             IF NEW.last_ping IS NOT NULL THEN
                 NEW.alert_after := NEW.last_ping + NEW.timeout + NEW.grace;
+                NEW.nag_after := NEW.last_ping + NEW.timeout + NEW.grace + NEW.nag;
             END IF;
             RETURN NEW;
         END;
