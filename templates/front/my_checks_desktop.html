@@ -54,14 +54,14 @@
                 data-url="{% url 'hc-update-timeout' check.code %}"
                 data-timeout="{{ check.timeout.total_seconds }}"
                 data-grace="{{ check.grace.total_seconds }}"
-                data-nag="{{ check.nag.total_seconds }}"
+                data-nag="{{ check.nag_interval.total_seconds }}"
                 class="timeout-grace">
                 {{ check.timeout|hc_duration }}
                 <br />
                 <span class="checks-subline">
                 {{ check.grace|hc_duration }}
                 <br />
-                {{ check.nag|hc_duration }}
+                {{ check.nag_interval|hc_duration }}
                 </span>
             </span>
         </td>

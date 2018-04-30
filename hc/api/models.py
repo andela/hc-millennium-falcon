@@ -49,7 +49,7 @@ class Check(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     timeout = models.DurationField(default=DEFAULT_TIMEOUT)
     grace = models.DurationField(default=DEFAULT_GRACE)
-    nag = models.DurationField(default=DEFAULT_NAG)
+    nag_interval = models.DurationField(default=DEFAULT_NAG)
     nag_mode = models.BooleanField(default=False)
     nag_after = models.DateTimeField(null=True, blank=True, editable=False)
     n_pings = models.IntegerField(default=0)
@@ -121,7 +121,7 @@ class Check(models.Model):
             "tags": self.tags,
             "timeout": int(self.timeout.total_seconds()),
             "grace": int(self.grace.total_seconds()),
-            "nag": int(self.nag.total_seconds()),
+            "nag_interval": int(self.nag_interval.total_seconds()),
             "n_pings": self.n_pings,
             "status": self.get_status()
         }

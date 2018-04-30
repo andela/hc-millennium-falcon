@@ -4,7 +4,7 @@ check = {
         "tags": {"type": "string"},
         "timeout": {"type": "number", "minimum": 60, "maximum": 604800},
         "grace": {"type": "number", "minimum": 60, "maximum": 604800},
-        "nag": {"type": "number", "minimum": 60, "maximum": 604800},
+        "nag_interval": {"type": "number", "minimum": 60, "maximum": 604800},
         "nag_mode": {"type": "boolean"},
         "channels": {"type": "string"}
     }

@@ -17,6 +17,7 @@ class ListChecksTestCase(BaseTestCase):
         self.a1 = Check(user=self.alice, name="Alice 1")
         self.a1.timeout = td(seconds=3600)
         self.a1.grace = td(seconds=900)
+        self.a1.nag_interval = td(seconds=900)
         self.a1.last_ping = self.now
         self.a1.n_pings = 1
         self.a1.status = "new"
@@ -25,6 +26,7 @@ class ListChecksTestCase(BaseTestCase):
         self.a2 = Check(user=self.alice, name="Alice 2")
         self.a2.timeout = td(seconds=86400)
         self.a2.grace = td(seconds=3600)
+        self.a2.nag_interval = td(seconds=3600)
         self.a2.last_ping = self.now
         self.a2.status = "up"
         self.a2.save()
@@ -47,6 +49,7 @@ class ListChecksTestCase(BaseTestCase):
         #Alice 1
         self.assertEqual(checks['Alice 1']['timeout'], 3600)
         self.assertEqual(checks['Alice 1']['grace'], 900)
+        self.assertEqual(checks['Alice 1']['nag_interval'], 900)
         self.assertIn('http://', checks['Alice 1']['ping_url'])
         self.assertEqual(checks['Alice 1']['status'], 'new')
         self.assertEqual(self.now, parser.parse(checks['Alice 1']['last_ping']))
@@ -56,6 +59,7 @@ class ListChecksTestCase(BaseTestCase):
         #Alice 2
         self.assertEqual(checks['Alice 2']['timeout'], 86400)
         self.assertEqual(checks['Alice 2']['grace'], 3600)
+        self.assertEqual(checks['Alice 2']['nag_interval'], 3600)
         self.assertIn('http://', checks['Alice 2']['ping_url'])
         self.assertEqual(checks['Alice 2']['status'], 'up')
         self.assertEqual(self.now, parser.parse(checks['Alice 2']['last_ping']))

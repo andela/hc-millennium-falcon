@@ -66,8 +66,8 @@ def checks(request):
             check.timeout = td(seconds=request.json["timeout"])
         if "grace" in request.json:
             check.grace = td(seconds=request.json["grace"])
-        if "nag" in request.json and "nag_mode" in request.json:
-            check.nag = td(seconds=request.json["nag"])
+        if "nag_interval" in request.json and "nag_mode" in request.json:
+            check.nag_interval = td(seconds=request.json["nag_interval"])
             check.nag_mode = request.json["nag_mode"]
 
         check.save()

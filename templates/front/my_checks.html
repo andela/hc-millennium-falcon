@@ -116,7 +116,7 @@
             {% csrf_token %}
             <input type="hidden" name="timeout" id="update-timeout-timeout" />
             <input type="hidden" name="grace" id="update-timeout-grace" />
-            <input type="hidden" name="nag" id="update-timeout-nag" />
+            <input type="hidden" name="nag_interval" id="update-timeout-nag" />
             <div class="modal-content">
                 <div class="modal-body">
                     <div class="update-timeout-info text-center">
@@ -164,7 +164,7 @@
                     </div>
                     <div id="nag-slider"></div>
 
-                    <!-- <div class="checkbox" id="nag-mode">
+                    <div class="checkbox" id="nag-mode">
                         <label>
                             <input
                                 name="nag_mode"
@@ -172,7 +172,7 @@
                                 {% if check.nag_mode %} checked {% endif %}>
                             Nag mode
                         </label>
-                    </div> -->
+                    </div>
 
                     <div class="update-timeout-terms">
                         <p>

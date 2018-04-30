@@ -9,7 +9,7 @@ def _pg(cursor):
         BEGIN
             IF NEW.last_ping IS NOT NULL THEN
                 NEW.alert_after := NEW.last_ping + NEW.timeout + NEW.grace;
-                NEW.nag_after := NEW.last_ping + NEW.timeout + NEW.grace + NEW.nag;
+                NEW.nag_after := NEW.last_ping + NEW.timeout + NEW.grace + NEW.nag_interval;
             END IF;
             RETURN NEW;
         END;
@@ -18,7 +18,7 @@ def _pg(cursor):
     DROP TRIGGER IF EXISTS update_alert_after ON api_check;
 
     CREATE TRIGGER update_alert_after
-    BEFORE INSERT OR UPDATE OF last_ping, timeout, grace  ON api_check
+    BEFORE INSERT OR UPDATE OF last_ping, timeout, grace, nag_interval  ON api_check
     FOR EACH ROW EXECUTE PROCEDURE update_alert_after();
     """)
 

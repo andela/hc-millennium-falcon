@@ -93,6 +93,7 @@ class CreateCheckTestCase(BaseTestCase):
             "tags": "bar,baz",
             "timeout": 3600,
             "grace": 60,
+            "nag_interval": 60,
             "channels": "*"
         })
 
@@ -104,7 +105,8 @@ class CreateCheckTestCase(BaseTestCase):
             "name": "Foo",
             "tags": "bar,baz",
             "timeout": 59,
-            "grace": 60
+            "grace": 60,
+            "nag_interval": 60
         })
 
         self.assertEqual(r.status_code, 400)
@@ -117,7 +119,8 @@ class CreateCheckTestCase(BaseTestCase):
             "name": "Foo",
             "tags": "bar,baz",
             "timeout": 604801,
-            "grace": 60
+            "grace": 60,
+            "nag_interval": 60
         })
         
         self.assertEqual(r.status_code, 400)

@@ -56,7 +56,7 @@
             </tr>
             <tr>
                 <th>Nag Interval</th>
-                <td>{{ check.nag|hc_duration }}</td>
+                <td>{{ check.nag_interval|hc_duration }}</td>
             </tr>
             <tr>
                 <th>Last Ping</th>
@@ -86,7 +86,7 @@
                 data-url="{% url 'hc-update-timeout' check.code %}"
                 data-timeout="{{ check.timeout.total_seconds }}"
                 data-grace="{{ check.grace.total_seconds }}"
-                data-nag="{{ check.nag.total_seconds }}"
+                data-nag="{{ check.nag_interval.total_seconds }}"
                 class="btn btn-default timeout-grace">Change Period</a>
 
             <a href="{% url 'hc-log' check.code %}" class="btn btn-default">Log</a>
