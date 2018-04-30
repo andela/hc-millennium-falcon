@@ -116,7 +116,7 @@ class CreateCheckTestCase(BaseTestCase):
             "api_key": "abc",
             "name": "Foo",
             "tags": "bar,baz",
-            "timeout": 604801,
+            "timeout": 31104001,
             "grace": 60
         })
         
