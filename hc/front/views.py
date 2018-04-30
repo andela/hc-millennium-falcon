@@ -33,16 +33,19 @@ def my_checks(request):
     checks = list(q)
 
     counter = Counter()
-    down_tags, grace_tags = set(), set()
+    nag_tags, down_tags, grace_tags = set(), set(), set()
     for check in checks:
         status = check.get_status()
+        nag_mode = check.nag_mode
         for tag in check.tags_list():
             if tag == "":
                 continue
 
             counter[tag] += 1
 
-            if status == "down":
+            if status == "down" and nag_mode == True:
+                nag_tags.add(tag)
+            elif status == "down":
                 down_tags.add(tag)
             elif check.in_grace_period():
                 grace_tags.add(tag)
@@ -52,6 +55,7 @@ def my_checks(request):
         "checks": checks,
         "now": timezone.now(),
         "tags": counter.most_common(),
+        "nag_tags": nag_tags,
         "down_tags": down_tags,
         "grace_tags": grace_tags,
         "ping_endpoint": settings.PING_ENDPOINT

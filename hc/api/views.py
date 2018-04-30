@@ -59,16 +59,12 @@ def checks(request):
         check.name = str(request.json.get("name", ""))
         check.tags = str(request.json.get("tags", ""))
 
-        # import ipdb
-        # ipdb.set_trace()
-        # print(request.json)
         if "timeout" in request.json:
             check.timeout = td(seconds=request.json["timeout"])
         if "grace" in request.json:
             check.grace = td(seconds=request.json["grace"])
-        if "nag_interval" in request.json and "nag_mode" in request.json:
+        if "nag_interval" in request.json:
             check.nag_interval = td(seconds=request.json["nag_interval"])
-            check.nag_mode = request.json["nag_mode"]
 
         check.save()
 

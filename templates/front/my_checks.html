@@ -18,7 +18,9 @@
     {% if tags %}
     <div id="my-checks-tags" class="col-sm-12">
         {% for tag, count in tags %}
-            {% if tag in down_tags %}
+            {% if tag in nag_tags %}
+                <button class="btn btn-danger btn-xs" data-toggle="button">{{ tag }}</button>
+            {% elif tag in down_tags %}
                 <button class="btn btn-danger btn-xs" data-toggle="button">{{ tag }}</button>
             {% elif tag in grace_tags %}
                 <button class="btn btn-warning btn-xs" data-toggle="button">{{ tag }}</button>
@@ -163,16 +165,6 @@
                         </span>
                     </div>
                     <div id="nag-slider"></div>
-
-                    <div class="checkbox" id="nag-mode">
-                        <label>
-                            <input
-                                name="nag_mode"
-                                type="checkbox"
-                                {% if check.nag_mode %} checked {% endif %}>
-                            Nag mode
-                        </label>
-                    </div>
 
                     <div class="update-timeout-terms">
                         <p>
