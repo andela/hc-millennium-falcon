@@ -128,3 +128,10 @@ class ProfileTestCase(BaseTestCase):
         api_key = self.alice.profile.api_key
         self.assertEqual(api_key, "")
         self.assertContains(result, "The API key has been revoked!")
+
+    def test_change_reporting_interval(self):
+        """testing successful change of report interval"""
+        self.client.login(username="alice@example.org", password="password")
+        form = {"reports_allowed":7}
+        result = self.client.post('/accounts/profile/', form)
+        self.assertEqual(200, result.status_code) 
