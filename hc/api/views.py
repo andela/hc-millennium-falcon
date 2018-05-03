@@ -20,6 +20,17 @@ def ping(request, code):
         check = Check.objects.get(code=code)
     except Check.DoesNotExist:
         return HttpResponseBadRequest()
+    
+    last_ping_time = check.last_ping
+    current_ping_time = timezone.now()
+
+    if last_ping_time is not None and \
+        current_ping_time < ((last_ping_time + check.timeout) - check.grace):
+        check.send_alert()
+        check.status = "often"
+    else:
+        check.status = "up"
+
 
     check.n_pings = F("n_pings") + 1
     check.last_ping = timezone.now()

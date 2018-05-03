@@ -103,3 +103,11 @@ class PingTestCase(TestCase):
         self.assertEqual(r.status_code, 200)
         self.assertEqual(self.check.status, "up")
 
+    def test_it_handles_check_running_often(self):
+        r = self.client.get("/ping/%s/" % self.check.code)
+        assert r.status_code == 200
+        
+        r = self.client.get("/ping/%s/" % self.check.code)
+        assert r.status_code == 200
+        self.check.refresh_from_db()
+        assert self.check.status == "often"
