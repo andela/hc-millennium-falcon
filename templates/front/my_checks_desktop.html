@@ -22,8 +22,11 @@
                     data-toggle="tooltip" title="Monitoring paused. Ping to resume."></span>
             {% elif check.in_grace_period %}
                 <span class="status icon-grace"></span>
-            {% elif check.get_status == "up" %}
-                <span class="status icon-up"></span>
+            {% elif check.get_status == "up" %}  
+                    <span class="status icon-up"></span>
+            {% elif check.get_status == "often" %}
+                    <span class="status icon-up often"             
+                        data-toggle="tooltip" title="This job is being run too often."></span>
             {% elif check.get_status == "down" %}
                 <span class="status icon-down"></span>
             {% endif %}
