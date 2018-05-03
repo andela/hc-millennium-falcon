@@ -44,7 +44,7 @@ class Command(BaseCommand):
         # Save the new status. If sendalerts crashes,
         # it won't process this check again.
         check.status = check.get_status()
-        if check.status == "down":
+        if check.status == "down" and timezone.now() > (check.last_ping + check.timeout + check.grace):
             check.nag_after = timezone.now() + check.nag_interval
             check.nag_mode = True
         check.save()

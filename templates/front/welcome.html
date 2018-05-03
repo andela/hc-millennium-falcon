@@ -164,7 +164,7 @@
             alt="Period/Grace Time dialog" />
     </div>
     <div class="col-sm-4">
-        Each check has configurable <strong>Period</strong> and <strong>Grace Time</strong> parameters.
+        Each check has configurable <strong>Period</strong>, <strong>Grace Time</strong> ang <strong>Nag interval</strong> parameters.
         Depending on these parameters and time since the last ping, the check is in one of the
         following states:
 
@@ -206,6 +206,17 @@
                     Time since last ping has exceeded <strong>Period</strong> + <strong>Grace</strong>.
                     When check goes from "Late" to "Down", HealthChecks
                     sends you a notification.
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span class="status icon-nag"></span>
+                </td>
+                <td>
+                    Nag.
+                    Time since last ping has exceeded <strong>Period</strong> + <strong>Grace</strong>.
+                    If the check goes to "Down" and is not resolved, HealthChecks
+                    keeps sending you a notification after every nag time interval.
                 </td>
             </tr>
         </table>
