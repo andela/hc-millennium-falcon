@@ -193,6 +193,10 @@ powershell.exe -ExecutionPolicy bypass -File C:\Scripts\healthchecks.ps1
     completes in 60 seconds the following day, you might not want to get
     alerted because the backups are 10 seconds late.
 </p>
+<p>
+    Also, each check has a <strong>Nag interval</strong> parameter, with default value of one hour.
+    This is the time interval for continuous nagging of the user after the grace period if the check is down.
+</p>
 <p>Each check can be in one of the following states:</p>
 
 <table class="table">
@@ -242,6 +246,17 @@ powershell.exe -ExecutionPolicy bypass -File C:\Scripts\healthchecks.ps1
             Time since last ping has exceeded <strong>Period</strong> + <strong>Grace</strong>.
             When check goes from "Late" to "Down", healthchecks.io
             sends you an alert.
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <span class="status icon-nag"></span>
+        </td>
+        <td>
+            <strong>Nag.</strong>
+            After the last ping has <strong>Period</strong> + <strong>Grace</strong>.
+            If the check is not resolved, healthchecks.io
+            sends you an alert after every nag interval.
         </td>
     </tr>
 </table>

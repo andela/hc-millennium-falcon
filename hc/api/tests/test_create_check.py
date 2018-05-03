@@ -31,7 +31,8 @@ class CreateCheckTestCase(BaseTestCase):
             "name": "Foo",
             "tags": "bar,baz",
             "timeout": 3600,
-            "grace": 60
+            "grace": 60,
+            "nag_interval": 60
         })
 
         self.assertEqual(r.status_code, 201)
@@ -45,6 +46,7 @@ class CreateCheckTestCase(BaseTestCase):
         self.assertEqual(check.tags, "bar,baz")
         self.assertEqual(check.timeout.total_seconds(), 3600)
         self.assertEqual(check.grace.total_seconds(), 60)
+        self.assertEqual(check.nag_interval.total_seconds(), 60)
         self.assertEqual(check.n_pings, 0)
         self.assertEqual(check.last_ping, None)
 
@@ -93,6 +95,7 @@ class CreateCheckTestCase(BaseTestCase):
             "tags": "bar,baz",
             "timeout": 3600,
             "grace": 60,
+            "nag_interval": 60,
             "channels": "*"
         })
 
@@ -104,7 +107,8 @@ class CreateCheckTestCase(BaseTestCase):
             "name": "Foo",
             "tags": "bar,baz",
             "timeout": 59,
-            "grace": 60
+            "grace": 60,
+            "nag_interval": 60
         })
 
         self.assertEqual(r.status_code, 400)
@@ -117,7 +121,8 @@ class CreateCheckTestCase(BaseTestCase):
             "name": "Foo",
             "tags": "bar,baz",
             "timeout": 31104001,
-            "grace": 60
+            "grace": 60,
+            "nag_interval": 60
         })
         
         self.assertEqual(r.status_code, 400)
