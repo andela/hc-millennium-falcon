@@ -32,7 +32,3 @@ urllib3==1.22
 python-dateutil==2.7.2
 waitress==1.1.0
 whitenoise==3.3.1
-<<<<<<< d76968426a288eb2ce833f937672474ddf87b87e
-mock==2.0
-=======
->>>>>>> chore(Deploy): Deploy the project to heroku (#8)
