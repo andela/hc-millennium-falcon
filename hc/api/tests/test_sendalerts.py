@@ -29,6 +29,7 @@ class SendAlertsTestCase(BaseTestCase):
             handled_names.append(args[0].name)
 
         self.assertEqual(set(names), set(handled_names))
+
     def test_it_handles_grace_period(self):
         check = Check(user=self.alice, status="up")
         # 1 day 30 minutes after ping the check is in grace period:

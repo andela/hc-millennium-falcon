@@ -6,7 +6,7 @@
         <th>Ping URL</th>
         <th class="th-period">
             Period <br />
-            <span class="checks-subline">Grace</span>
+            <span class="checks-subline">Grace<br />Nag Interval</span>
         </th>
         <th>Last Ping</th>
         <th></th>
@@ -27,6 +27,8 @@
             {% elif check.get_status == "often" %}
                 <span class="status icon-up often" 
                     data-toggle="tooltip" title="This job is being run too often."></span>
+            {% elif check.get_status == "down" and check.nag_mode == True %}
+                <span class="status icon-nag"></span>
             {% elif check.get_status == "down" %}
                 <span class="status icon-down"></span>
             {% endif %}
@@ -57,11 +59,14 @@
                 data-url="{% url 'hc-update-timeout' check.code %}"
                 data-timeout="{{ check.timeout.total_seconds }}"
                 data-grace="{{ check.grace.total_seconds }}"
+                data-nag="{{ check.nag_interval.total_seconds }}"
                 class="timeout-grace">
                 {{ check.timeout|hc_duration }}
                 <br />
                 <span class="checks-subline">
                 {{ check.grace|hc_duration }}
+                <br />
+                {{ check.nag_interval|hc_duration }}
                 </span>
             </span>
         </td>

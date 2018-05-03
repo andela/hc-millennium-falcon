@@ -14,7 +14,7 @@ from django.utils import timezone
 from django.utils.crypto import get_random_string
 from django.utils.six.moves.urllib.parse import urlencode
 from hc.api.decorators import uuid_or_400
-from hc.api.models import DEFAULT_GRACE, DEFAULT_TIMEOUT, Channel, Check, Ping
+from hc.api.models import DEFAULT_NAG, DEFAULT_GRACE, DEFAULT_TIMEOUT, Channel, Check, Ping
 from hc.front.forms import (AddChannelForm, AddWebhookForm, NameTagsForm,
                             TimeoutForm)
 
@@ -33,16 +33,19 @@ def my_checks(request):
     checks = list(q)
 
     counter = Counter()
-    down_tags, grace_tags = set(), set()
+    nag_tags, down_tags, grace_tags = set(), set(), set()
     for check in checks:
         status = check.get_status()
+        nag_mode = check.nag_mode
         for tag in check.tags_list():
             if tag == "":
                 continue
 
             counter[tag] += 1
 
-            if status == "down":
+            if status == "down" and nag_mode == True:
+                nag_tags.add(tag)
+            elif status == "down":
                 down_tags.add(tag)
             elif check.in_grace_period():
                 grace_tags.add(tag)
@@ -53,6 +56,7 @@ def my_checks(request):
         "page_title": "My Checks",
         "now": timezone.now(),
         "tags": counter.most_common(),
+        "nag_tags": nag_tags,
         "down_tags": down_tags,
         "grace_tags": grace_tags,
         "ping_endpoint": settings.PING_ENDPOINT
@@ -129,7 +133,8 @@ def docs_api(request):
         "SITE_ROOT": settings.SITE_ROOT,
         "PING_ENDPOINT": settings.PING_ENDPOINT,
         "default_timeout": int(DEFAULT_TIMEOUT.total_seconds()),
-        "default_grace": int(DEFAULT_GRACE.total_seconds())
+        "default_grace": int(DEFAULT_GRACE.total_seconds()),
+        "default_nag": int(DEFAULT_NAG.total_seconds())
     }
 
     return render(request, "front/docs_api.html", ctx)
@@ -182,6 +187,7 @@ def update_timeout(request, code):
     if form.is_valid():
         check.timeout = td(seconds=form.cleaned_data["timeout"])
         check.grace = td(seconds=form.cleaned_data["grace"])
+        check.nag_interval = td(seconds=form.cleaned_data["nag_interval"])
         check.save()
 
     return redirect("hc-checks")
