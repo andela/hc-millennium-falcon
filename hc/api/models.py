@@ -126,6 +126,7 @@ class Check(models.Model):
             "timeout": int(self.timeout.total_seconds()),
             "grace": int(self.grace.total_seconds()),
             "nag_interval": int(self.nag_interval.total_seconds()),
+            "nag_mode": self.nag_mode,
             "n_pings": self.n_pings,
             "status": self.get_status()
         }
