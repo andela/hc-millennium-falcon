@@ -46,7 +46,6 @@ class Command(BaseCommand):
         check.status = check.get_status()
         if check.status == "down" and timezone.now() > (check.last_ping + check.timeout + check.grace):
             check.nag_after = timezone.now() + check.nag_interval
-            check.nag_mode = True
         check.save()
 
         tmpl = "\nSending alert, status=%s, code=%s\n"

@@ -33,7 +33,8 @@ class CreateCheckTestCase(BaseTestCase):
             "department": "production",
             "timeout": 3600,
             "grace": 60,
-            "nag_interval": 60
+            "nag_interval": 60,
+            "nag_mode": True
         })
 
         self.assertEqual(r.status_code, 201)
@@ -49,6 +50,7 @@ class CreateCheckTestCase(BaseTestCase):
         self.assertEqual(check.timeout.total_seconds(), 3600)
         self.assertEqual(check.grace.total_seconds(), 60)
         self.assertEqual(check.nag_interval.total_seconds(), 60)
+        self.assertEqual(check.nag_mode, True)
         self.assertEqual(check.n_pings, 0)
         self.assertEqual(check.last_ping, None)
 

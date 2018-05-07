@@ -28,7 +28,8 @@
                 <span class="status icon-up often" 
                     data-toggle="tooltip" title="This job is being run too often."></span>
             {% elif check.get_status == "down" and check.nag_mode == True %}
-                <span class="status icon-nag"></span>
+                <span class="status icon-nag"
+                    data-toggle="tooltip" title="Nagging until the check is resolved."></span>
             {% elif check.get_status == "down" %}
                 <span class="status icon-down"></span>
             {% endif %}
@@ -62,6 +63,7 @@
                 data-timeout="{{ check.timeout.total_seconds }}"
                 data-grace="{{ check.grace.total_seconds }}"
                 data-nag="{{ check.nag_interval.total_seconds }}"
+                data-nag-mode="{{ check.nag_mode }}"
                 class="timeout-grace">
                 {{ check.timeout|hc_duration }}
                 <br />
