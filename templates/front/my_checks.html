@@ -30,6 +30,14 @@
         {% endfor %}
     </div>
     {% endif %}
+    {% if departments %}
+    <div id="my-checks-departments" class="col-sm-12">
+        <br>
+        {% for department in departments %}
+        <button class="btn label-department btn-xs" data-toggle="button">{{ department }}</button>
+        {% endfor %}
+    </div>
+    {% endif %}
 
 </div>
 <div class="row">
@@ -102,6 +110,26 @@
                                 </span>
                             </div>
                         </div>
+
+                        <div class="form-group">
+                            <label for="update-department-input" class="col-sm-2 control-label">
+                                Department
+                            </label>
+                            <div class="col-sm-9">
+                                <input
+                                    id="update-department-input"
+                                    name="department"
+                                    type="text"
+                                    value=""
+                                    placeholder="department"
+                                    class="input-name form-control" />
+
+                                <span class="help-block">
+                                    Optionally, assign a department for easy filtering.
+                                </span>
+                            </div>
+                        </div>
+
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>

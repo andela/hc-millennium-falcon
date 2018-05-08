@@ -33,10 +33,12 @@ def my_checks(request):
     checks = list(q)
 
     counter = Counter()
-    nag_tags, down_tags, grace_tags = set(), set(), set()
+    nag_tags, down_tags, grace_tags, departments = set(), set(), set(), set()
     for check in checks:
         status = check.get_status()
         nag_mode = check.nag_mode
+        if check.department != "":
+            departments.add(check.department)
         for tag in check.tags_list():
             if tag == "":
                 continue
@@ -56,6 +58,7 @@ def my_checks(request):
         "page_title": "My Checks",
         "now": timezone.now(),
         "tags": counter.most_common(),
+        "departments": departments,
         "nag_tags": nag_tags,
         "down_tags": down_tags,
         "grace_tags": grace_tags,
@@ -169,6 +172,7 @@ def update_name(request, code):
     if form.is_valid():
         check.name = form.cleaned_data["name"]
         check.tags = form.cleaned_data["tags"]
+        check.department = form.cleaned_data["department"]
         check.save()
 
     return redirect("hc-checks")

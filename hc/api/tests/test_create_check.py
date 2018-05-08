@@ -30,6 +30,7 @@ class CreateCheckTestCase(BaseTestCase):
             "api_key": "abc",
             "name": "Foo",
             "tags": "bar,baz",
+            "department": "production",
             "timeout": 3600,
             "grace": 60,
             "nag_interval": 60
@@ -44,6 +45,7 @@ class CreateCheckTestCase(BaseTestCase):
         check = Check.objects.get()
         self.assertEqual(check.name, "Foo")
         self.assertEqual(check.tags, "bar,baz")
+        self.assertEqual(check.department, "production")
         self.assertEqual(check.timeout.total_seconds(), 3600)
         self.assertEqual(check.grace.total_seconds(), 60)
         self.assertEqual(check.nag_interval.total_seconds(), 60)

@@ -54,6 +54,7 @@ class NotifyTestCase(BaseTestCase):
         self._setup_data("webhook", template)
         self.check.name = "Hello World"
         self.check.tags = "foo bar"
+        self.check.department = "production"
         self.check.save()
 
         self.channel.notify(self.check)
@@ -73,6 +74,7 @@ class NotifyTestCase(BaseTestCase):
         self._setup_data("webhook", template)
         self.check.name = "$TAG1"
         self.check.tags = "foo"
+        self.check.department = "production"
         self.check.save()
 
         self.channel.notify(self.check)
