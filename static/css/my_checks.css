@@ -71,6 +71,23 @@
     font-style: normal;
 }
 
+.label-department {
+    background-color: #203422;
+    color: #fff;
+    font-style: normal;
+}
+
+.label-department:hover {
+    text-decoration: none;
+    background-color: #fff;
+    color: #203422;
+    font-style: normal;
+}
+
+.label-department:active,:checked,:focus {
+    background-color: #fff;
+}
+
 
 #show-usage-modal  .modal-dialog {
      width: 1100px;
