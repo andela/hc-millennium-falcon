@@ -78,8 +78,11 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'hc.wsgi.application'
 TEST_RUNNER = 'hc.api.tests.CustomRunner'
-
-
+TWILIO_ACCOUNT_SID = os.environ.get('TWILIO_ACCOUNT_SID')
+TWILIO_AUTH_TOKEN = os.environ.get('TWILIO_AUTH_TOKEN')
+DJANGO_TWILIO_FORGERY_PROTECTION = False
+FROM_PHONE_NUMBER = os.environ.get("FROM_PHONE_NUMBER")
+TOKEN = os.environ.get("TOKEN")
 # Default database engine is SQLite. So one can just check out code,
 # install requirements.txt and do manage.py runserver and it works
 DATABASES = {

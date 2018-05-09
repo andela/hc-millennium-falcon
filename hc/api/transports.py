@@ -1,9 +1,13 @@
 from django.conf import settings
 from django.template.loader import render_to_string
 from django.utils import timezone
+from twilio.rest import Client
+import twilio
 import json
+from telegram.ext import Updater
 import requests
 from six.moves.urllib.parse import quote
+import os
 
 from hc.lib import emails
 
@@ -60,8 +64,31 @@ class Email(Transport):
         emails.alert(self.channel.value, ctx)
 
 
-class HttpTransport(Transport):
+class Sms(Transport):
+    def notify(self, check):
+        account_sid = settings.TWILIO_ACCOUNT_SID
+        auth_token = settings.TWILIO_AUTH_TOKEN
+        client = Client(account_sid, auth_token)
+        try:
+            message = client.messages.create(
+                body="Hello, your check: " + str(check.code) + " is " + str(check.status+"."),
+                from_=settings.FROM_PHONE_NUMBER,
+                to=self.channel.value
+            )
+        except twilio.base.exceptions.TwilioException:
 
+            return "Connection timed out"
+
+
+class Telegram(Transport):
+    def notify(self, check):
+        TOKEN = settings.TOKEN
+        chat_id = self.channel.value
+        message = "Your check: " + str(check.name) + " " + str(check.code) + " is " + str(check.status)
+        requests.post(url="https://api.telegram.org/bot"+TOKEN+"/sendMessage?chat_id="+chat_id+"&text="+message)
+
+
+class HttpTransport(Transport):
     def request(self, method, url, **kwargs):
         try:
             options = dict(kwargs)
@@ -164,7 +191,7 @@ class Pushbullet(HttpTransport):
         url = "https://api.pushbullet.com/v2/pushes"
         headers = {
             "Access-Token": self.channel.value,
-            "Conent-Type": "application/json"
+            "Content-Type": "application/json"
         }
         payload = {
             "type": "note",
