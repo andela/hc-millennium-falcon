@@ -28,6 +28,8 @@
         <tr class="channel-row">
             <td>
             {% if ch.kind == "email" %} Email {% endif %}
+            {% if ch.kind == "sms" %} SMS {% endif %}
+            {% if ch.kind == "telegram" %} Telegram {% endif %}
             {% if ch.kind == "webhook" %} Webhook {% endif %}
             {% if ch.kind == "slack" %} Slack {% endif %}
             {% if ch.kind == "hipchat" %} HipChat {% endif %}
@@ -126,6 +128,22 @@
 
     <h1 class="ai-title">Add More</h1>
     <ul class="add-integration">
+     <li>
+            <img width="238" src="{% static 'img/integrations/telegram.png' %}"
+                class="icon" alt="Slack icon" />
+
+            <h2>Telegram</h2>
+            <p>Get notifications about your checks from telegram.</p>
+            <a href="{% url 'hc-add-telegram' %}" class="btn btn-primary">Add Integration</a>
+        </li>
+     <li>
+            <img width="238" src="{% static 'img/integrations/twilio-logo.png' %}"
+                class="icon" alt="Slack icon" />
+
+            <h2>SMS</h2>
+            <p>Recieve SMS's.</p>
+            <a href="{% url 'hc-add-sms' %}" class="btn btn-primary">Add Integration</a>
+        </li>
         <li>
             <img src="{% static 'img/integrations/slack.png' %}"
                 class="icon" alt="Slack icon" />
@@ -148,7 +166,7 @@
                 class="icon" alt="Webhook icon" />
 
             <h2>Webhook</h2>
-            <p>Receive a HTTP callback when a check goes down.</p>
+            <p>Receive an HTTP callback when a check goes down.</p>
 
             <a href="{% url 'hc-add-webhook' %}" class="btn btn-primary">Add Integration</a>
         </li>

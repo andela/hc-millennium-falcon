@@ -10,11 +10,13 @@ from requests.exceptions import ConnectionError, Timeout
 
 class NotifyTestCase(BaseTestCase):
 
-    def _setup_data(self, kind, value, status="down", email_verified=True):
+    def _setup_data(self, kind, value, sid="sid", token="token", status="down", email_verified=True):
         self.check = Check()
         self.check.status = status
         self.check.user = self.alice
         self.check.save()
+        self.sid =  sid
+        self.token= token
         self.channel = Channel(user=self.alice)
         self.channel.kind = kind
         self.channel.value = value

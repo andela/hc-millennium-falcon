@@ -1,7 +1,8 @@
 from collections import Counter
 from datetime import timedelta as td
 from itertools import tee
-
+from telegram.ext import Updater, CommandHandler
+import logging
 import requests
 from django.conf import settings
 from django.contrib import messages
@@ -11,6 +12,7 @@ from django.http import Http404, HttpResponseBadRequest, HttpResponseForbidden
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils import timezone
+import json, os
 from django.utils.crypto import get_random_string
 from django.utils.six.moves.urllib.parse import urlencode
 from hc.api.decorators import uuid_or_400
@@ -331,6 +333,11 @@ def do_add_channel(request, data):
 
         if channel.kind == "email":
             channel.send_verify_link()
+        if channel.kind == "telegram":
+            if "TOKEN" in os.environ:
+                token = os.environ.get("TOKEN")
+                updater = Updater(token=token)
+                updater.stop()
 
         return redirect("hc-channels")
     else:
@@ -395,6 +402,31 @@ def add_email(request):
 
 
 @login_required
+def add_telegram(request):
+    ctx = {"page": "channels"}
+    if "TOKEN" in os.environ:
+        token = os.environ.get("TOKEN")
+        updater = Updater(token=token)
+
+        def start(bot, update):
+            bot.send_message(chat_id=update.message.chat_id,
+                             text=str("Hello, Welcome to healthchecksbot. " + " Your chat ID is " +
+                                      str(update.message.chat_id)))
+        start_handler = CommandHandler('start', start)
+        # add handlers
+        updater.dispatcher.add_handler(start_handler)
+        updater.start_polling()
+        return render(request, 'integrations/add_telegram.html', ctx)
+    return render(request, 'integrations/add_telegram.html', ctx)
+
+
+@login_required
+def add_sms(request):
+    ctx = {"page": "channels"}
+    return render(request, "integrations/add_sms.html", ctx)
+
+
+@login_required
 def add_webhook(request):
     if request.method == "POST":
         form = AddWebhookForm(request.POST)
@@ -414,8 +446,14 @@ def add_webhook(request):
 
 @login_required
 def add_pd(request):
-    ctx = {"page": "channels"}
-    return render(request, "integrations/add_pd.html", ctx)
+    if not settings.SLACK_CLIENT_ID and not request.user.is_authenticated:
+        return redirect("hc-login")
+
+    ctx = {
+        "page": "channels",
+        "slack_client_id": settings.SLACK_CLIENT_ID
+    }
+    return render(request, "integrations/add_telegram.html", ctx)
 
 
 def add_slack(request):

@@ -1,0 +1,85 @@
+ {% extends "base.html" %}
+{% load compress humanize staticfiles hc_extras %}
+
+{% block title %}Add Telegram - healthchecks.io{% endblock %}
+
+
+{% block content %}
+
+    <div class="row">
+    <div class="col-sm-12">
+
+          <h1>Telegram</h1>
+
+        <p>If your team uses <a href="http://telegram.org/">Telegram</a>, you can set
+        up healthchecks.io to send status updates directly to the healthchecks
+        telegrambot.</p>
+
+        <h2>Setup Guide</h2>
+
+        <div class="row ai-step">
+            <div class="col-sm-6">
+                <span class="step-no">1</span>
+                Open your Telegram application and search for <strong>healthchecksbot.</strong>
+                From the search results select <strong>healthchecksbot</strong>
+            </div>
+            <div class="col-sm-6">
+                <img
+                    class="ai-guide-screenshot"
+                    alt="Screenshot"
+                    src="{% static 'img/integrations/telegram_instruction_1.png' %}">
+            </div>
+        </div>
+        <div class="row ai-step">
+            <div class="col-sm-6">
+                <span class="step-no">2</span>
+                Select start at the bottom of the application interface and you should receive a message entailing
+                <strong>the chat ID.</strong> To complete telegram integration, copy and paste the chat ID into the
+                <strong>chat ID field below.</strong>.
+            </div>
+        </div>
+
+        <div class="row ai-step">
+            <div class="col-sm-6">
+                <span class="step-no">3</span>
+                <p>If the start is not availabe run the
+                command <strong> /start</strong> to receive the message.</p>
+                <p>Save the integration, and it's done!</p>
+            </div>
+            <div class="col-sm-6">
+                <img
+                    class="ai-guide-screenshot"
+                    alt="Screenshot"
+                    src="{% static 'img/integrations/telegram_instruction_2.png' %}">
+            </div>
+        </div>
+
+        <h2>Integration Settings</h2>
+
+        <form method="post" class="form-horizontal" action="{% url 'hc-add-channel' %}">
+            {% csrf_token %}
+            <input type="hidden" name="kind" value="telegram" />
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Chat ID</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" name="value" placeholder="">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="submit" class="btn btn-primary">Save Integration</button>
+                </div>
+            </div>
+        </form>
+
+
+    </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+{% compress js %}
+<script src="{% static 'js/jquery-2.1.4.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+{% endcompress %}
+{% endblock %}
