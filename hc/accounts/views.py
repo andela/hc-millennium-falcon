@@ -1,6 +1,8 @@
 import uuid
 import re
+from datetime import timedelta
 
+from django.utils import timezone
 from django.contrib import messages
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
@@ -157,8 +159,15 @@ def profile(request):
             form = ReportSettingsForm(request.POST)
             if form.is_valid():
                 profile.reports_allowed = form.cleaned_data["reports_allowed"]
+                profile.reports_period = form.cleaned_data["reports_period"]                
+                if profile.reports_period == "monthly":
+                    profile.next_report_date = timezone.now() + timedelta(days=30)
+                if profile.reports_period == "weekly":
+                    profile.next_report_date = timezone.now() + timedelta(days=7)
+                if profile.reports_period == "daily":
+                    profile.next_report_date = timezone.now() + timedelta(days=1)
                 profile.save()
-                messages.success(request, "Your settings have been updated!")
+                messages.success(request, "Your %s report settings have been updated!" %profile.reports_period)
         elif "invite_team_member" in request.POST:
             if not profile.team_access_allowed:
                 return HttpResponseForbidden()

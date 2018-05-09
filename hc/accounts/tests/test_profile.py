@@ -1,4 +1,6 @@
 from django.core import mail
+from django.utils import timezone
+from datetime import timedelta
 
 from hc.test import BaseTestCase
 from hc.accounts.models import Member
@@ -25,16 +27,56 @@ class ProfileTestCase(BaseTestCase):
         self.assertIn('set a password for your account on healthchecks.io', mail.outbox[0].body)
         self.assertIn('Set password on healthchecks.io', mail.outbox[0].subject)
 
-    def test_it_sends_report(self):
+    def test_it_sends_daily_report(self):
         check = Check(name="Test Check", user=self.alice)
-        check.save()
-
+        self.alice.profile.reports_period = "daily"
+        check.save()        
         self.alice.profile.send_report()
 
         self.assertGreater(len(mail.outbox), 0)
-        self.assertIn('This is a monthly report sent by healthchecks.io', mail.outbox[0].body)
+        self.assertIn('This is a daily report sent by healthchecks.io', mail.outbox[0].body)
         self.assertIsNot('', mail.outbox[0].subject)
 
+    def test_it_sends_weekly_report(self):
+        check = Check(name="Test Check", user=self.alice)
+        self.alice.profile.reports_period = "weekly"
+        check.save()        
+        self.alice.profile.send_report()
+
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertIn('This is a weekly report sent by healthchecks.io', mail.outbox[0].body)
+
+    def test_it_sends_monthly_report(self):
+        check = Check(name="Test Check", user=self.alice)
+        self.alice.profile.reports_period = "monthly"
+        check.save()        
+        self.alice.profile.send_report()
+
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertIn('This is a monthly report sent by healthchecks.io', mail.outbox[0].body)
+
+    def test_daily_reports_data_posted(self):
+        self.client.login(username="alice@example.org", password="password")
+        form = {"update_reports_allowed": "1", "reports_allowed":True, "reports_period":"daily"}
+        result = self.client.post("/accounts/profile/", form)
+        self.assertEqual(200, result.status_code)
+        self.assertContains(result, "Your daily report settings have been updated!")
+
+    def test_weekly_reports_data_posted(self):
+        self.client.login(username="alice@example.org", password="password")
+        form = {"update_reports_allowed": "1", "reports_allowed":True, "reports_period":"weekly"}
+        result = self.client.post("/accounts/profile/", form)
+        self.assertEqual(200, result.status_code)
+        self.assertContains(result, "Your weekly report settings have been updated!")
+
+
+    def test_monthly_reports_data_posted(self):
+        self.client.login(username="alice@example.org", password="password")
+        form = {"update_reports_allowed": "1", "reports_allowed":True, "reports_period":"monthly"}
+        result = self.client.post("/accounts/profile/", form)
+        self.assertEqual(200, result.status_code)
+        self.assertContains(result, "Your monthly report settings have been updated!")
+        
 
     def test_it_adds_team_member(self):
         self.client.login(username="alice@example.org", password="password")
@@ -42,7 +84,6 @@ class ProfileTestCase(BaseTestCase):
         form = {"invite_team_member": "1", "email": "frank@example.org"}
         r = self.client.post("/accounts/profile/", form)
         assert r.status_code == 200
-
         member_emails = set()
         for member in self.alice.profile.member_set.all():
             member_emails.add(member.user.email)
@@ -50,9 +91,6 @@ class ProfileTestCase(BaseTestCase):
         self.assertTrue(len(member_emails), 2)
         self.assertIn(form['email'], member_emails)
         self.assertTrue("frank@example.org" in member_emails)
-       
-
-        
         self.assertEqual(len(mail.outbox), 1)
         self.assertIn('alice@example.org invites you to their healthchecks.io account', mail.outbox[0].body)
 
@@ -117,7 +155,6 @@ class ProfileTestCase(BaseTestCase):
         # Expect only Alice's tags
         self.assertNotContains(r, "bobs-tag.svg")
 
-    ### Test it creates and revokes API key
     def test_revoking_of_apikey(self):
         """test revoking of api key"""
         self.client.login(username='alice@example.org', password='password')
