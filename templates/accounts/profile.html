@@ -19,23 +19,50 @@
 </div>
 
 <div class="row">
+    <div class="col-sm-12">
+            {% if not profile.reports_period %}
+            <div class="alert col-sm-12 alert-dismissible alert-danger" role="alert">        
+                    <p class=""><strong>You have not set any reporting period</strong></p>        
+            </div>
+            {% endif %}
+    </div>
+</div>
+
+<div class="row">
     <div class="col-sm-6">
         <div class="panel panel-default">
             <div class="panel-body settings-block">
                 <form method="post">
                     {% csrf_token %}
-                    <h2>Monthly Reports</h2>
-                    <label>
-                        <input
-                            name="reports_allowed"
-                            type="checkbox"
-                            {% if profile.reports_allowed %} checked {% endif %}>
-                        Each month send me a summary of my checks
-                    </label>
-                    <button
-                        name="update_reports_allowed"
-                        type="submit"
-                        class="btn btn-default pull-right">Save</button>
+                    <!-- <h2>Periodic Reports</h2> -->
+                    <div>
+                        <label>
+                            <input name="reports_allowed" type="checkbox"￼ {% if profile.reports_allowed == True %} checked {% endif %}>&nbsp; Send me a summary of my checks
+        ￼                </label></div><br>
+    
+                        <!-- begin periodic setting  -->
+                        <div>
+                        <label class="radio-inline">
+                            <input
+                                name="reports_period" value="monthly"
+                                type="radio" {% if profile.reports_period == "monthly" %} checked {% endif %}>
+                        Monthly </label>
+                        <label class="radio-inline">
+                            <input
+                                name="reports_period" value="weekly"
+                                type="radio" {% if profile.reports_period == "weekly" %} checked {% endif %}>
+                        Weekly </label>
+                        <label class="radio-inline">
+                            <input
+                                name="reports_period" value="daily"
+                                type="radio" {% if profile.reports_period == "daily" %} checked {% endif %}>
+                        Daily </label>
+                        <!-- end reporting period -->
+                        
+                        <button
+                            name="update_reports_allowed"
+                            type="submit"
+                            class="btn btn-default pull-right">Save</button></div>
                 </form>
             </div>
         </div>

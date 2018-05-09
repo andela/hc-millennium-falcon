@@ -19,6 +19,7 @@ class Profile(models.Model):
     team_name = models.CharField(max_length=200, blank=True)
     team_access_allowed = models.BooleanField(default=False)
     next_report_date = models.DateTimeField(null=True, blank=True)
+    reports_period = models.CharField(max_length=200, null=True)
     reports_allowed = models.BooleanField(default=True)
     ping_log_limit = models.IntegerField(default=100)
     token = models.CharField(max_length=128, blank=True)
@@ -53,10 +54,18 @@ class Profile(models.Model):
         self.api_key = base64.urlsafe_b64encode(os.urandom(24))
         self.save()
 
+    def set_next_report_date(self):
+        if self.reports_period == "monthly":
+            return 30
+        if self.reports_period == "weekly":
+            return 7
+        if self.reports_period == "daily":
+            return 1
+
     def send_report(self):
         # reset next report date first:
         now = timezone.now()
-        self.next_report_date = now + timedelta(days=30)
+        self.next_report_date = now + timedelta(days=self.set_next_report_date())
         self.save()
 
         token = signing.Signer().sign(uuid.uuid4())
@@ -66,7 +75,8 @@ class Profile(models.Model):
         ctx = {
             "checks": self.user.check_set.order_by("created"),
             "now": now,
-            "unsub_link": unsub_link
+            "unsub_link": unsub_link,
+            "reports_period": self.reports_period
         }
 
         emails.report(self.user.email, ctx)
