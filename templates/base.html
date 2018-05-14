@@ -31,6 +31,21 @@
     <link rel="stylesheet" href="{% static 'css/settings.css' %}" type="text/css">
     {% endcompress %}
 </head>
+
+<!--Start of Tawk.to Script-->
+<script type="text/javascript">
+    var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+    (function(){
+    var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+    s1.async=true;
+    s1.src='https://embed.tawk.to/5af9532e227d3d7edc2541d6/default';
+    s1.charset='UTF-8';
+    s1.setAttribute('crossorigin','*');
+    s0.parentNode.insertBefore(s1,s0);
+    })();
+</script>
+<!--End of Tawk.to Script-->
+
 <body class="page-{{ page }}">
     <nav class="navbar navbar-default">
         <div class="container">
@@ -94,13 +109,23 @@
                 </li>
                 {% endif %}
 
-                <li {% if page == 'docs' %} class="active" {% endif %}>
-                    <a href="{% url 'hc-docs' %}">Docs</a>
-                </li>
-
                 <li {% if page == 'about' %} class="active" {% endif %}>
                     <a href="{% url 'hc-about' %}">About</a>
                 </li>
+
+                <li class="active dropdown">
+                    <a href="{% url 'hc-faq' %}" class="dropdown-toggle" data-toggle="dropdown"  aria-haspopup="true">HELP <span class="caret"></span></a>
+                    
+                    <ul class="dropdown-menu">
+                        <li><a href="{% url 'hc-docs' %}">Docs</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="{% url 'hc-videos' %}">Video Tutorials</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="{% url 'hc-faq' %}">FAQ</a></li>
+                      </ul>
+                      
+                </li>
+
             </ul>
 
 
