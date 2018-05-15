@@ -2,7 +2,7 @@ import base64
 import os
 import uuid
 from datetime import timedelta
-
+from hc.api.models import Check
 from django.conf import settings
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import User
@@ -81,12 +81,13 @@ class Profile(models.Model):
 
         emails.report(self.user.email, ctx)
 
-    def invite(self, user):
+    def invite(self, user, checks):
         member = Member(team=self, user=user)
         member.save()
 
         # Switch the invited user over to the new team so they
         # notice the new team on next visit:
+        member.assign_checks(checks)
         user.profile.current_team = self
         user.profile.save()
 
@@ -94,5 +95,10 @@ class Profile(models.Model):
 
 
 class Member(models.Model):
-    team = models.ForeignKey(Profile)
-    user = models.ForeignKey(User)
+    team = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    checks = models.ManyToManyField(Check)
+
+    def assign_checks(self, checks):
+        # checks = Check.objects.filter(user=self.user)
+        self.checks.add(*checks)

@@ -4,10 +4,8 @@ from django.utils import timezone
 from twilio.rest import Client
 import twilio
 import json
-from telegram.ext import Updater
 import requests
 from six.moves.urllib.parse import quote
-import os
 
 from hc.lib import emails
 

@@ -69,16 +69,25 @@ class ProfileTestCase(BaseTestCase):
         self.assertEqual(200, result.status_code)
         self.assertContains(result, "Your weekly report settings have been updated!")
 
-
     def test_monthly_reports_data_posted(self):
         self.client.login(username="alice@example.org", password="password")
         form = {"update_reports_allowed": "1", "reports_allowed":True, "reports_period":"monthly"}
         result = self.client.post("/accounts/profile/", form)
         self.assertEqual(200, result.status_code)
         self.assertContains(result, "Your monthly report settings have been updated!")
-        
 
     def test_it_adds_team_member(self):
+        self.client.login(username="alice@example.org", password="password")
+
+        form = {"invite_team_member": "1", "email": "bob@example.org"}
+        r = self.client.post("/accounts/profile/", form)
+        assert r.status_code == 200
+        member_emails = set()
+        for member in self.alice.profile.member_set.all():
+            member_emails.add(member.user.email)
+        self.assertContains(r, "is already a member of the team!")
+
+    def test_it_does_not_add_team_member_twice(self):
         self.client.login(username="alice@example.org", password="password")
 
         form = {"invite_team_member": "1", "email": "frank@example.org"}

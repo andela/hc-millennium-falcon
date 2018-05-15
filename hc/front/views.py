@@ -19,7 +19,8 @@ from hc.api.decorators import uuid_or_400
 from hc.api.models import DEFAULT_NAG, DEFAULT_GRACE, DEFAULT_TIMEOUT, Channel, Check, Ping
 from hc.front.forms import (AddChannelForm, AddWebhookForm, NameTagsForm,
                             TimeoutForm)
-
+from hc.accounts.models import Member
+import telegram
 
 # from itertools recipes:
 def pairwise(iterable):
@@ -31,9 +32,14 @@ def pairwise(iterable):
 
 @login_required
 def my_checks(request):
-    q = Check.objects.filter(user=request.team.user).order_by("created")
-    checks = list(q)
-
+    if request.team.user.id == request.user.id:
+        q = Check.objects.filter(user=request.team.user).order_by("created")
+        checks = list(q)
+    else:
+        members = Member.objects.filter(team=request.team.user.profile)
+        member_checks = [member for member in members if member.user == request.user]
+        q = member_checks[0].checks.all()
+        checks = list(q)
     counter = Counter()
     nag_tags, down_tags, grace_tags, departments = set(), set(), set(), set()
     for check in checks:
@@ -68,6 +74,7 @@ def my_checks(request):
     }
 
     return render(request, "front/my_checks.html", ctx)
+
 
 @login_required
 def my_failed_checks(request):
@@ -335,9 +342,12 @@ def do_add_channel(request, data):
             channel.send_verify_link()
         if channel.kind == "telegram":
             if "TOKEN" in os.environ:
-                token = os.environ.get("TOKEN")
-                updater = Updater(token=token)
-                updater.stop()
+                token = settings.TOKEN
+                try:
+                    updater = Updater(token=token)
+                    updater.stop()
+                except telegram.error.InvalidToken:
+                    return HttpResponseBadRequest
 
         return redirect("hc-channels")
     else:
@@ -405,18 +415,21 @@ def add_email(request):
 def add_telegram(request):
     ctx = {"page": "channels"}
     if "TOKEN" in os.environ:
-        token = os.environ.get("TOKEN")
-        updater = Updater(token=token)
+        token = settings.TOKEN
 
-        def start(bot, update):
-            bot.send_message(chat_id=update.message.chat_id,
-                             text=str("Hello, Welcome to healthchecksbot. " + " Your chat ID is " +
-                                      str(update.message.chat_id)))
-        start_handler = CommandHandler('start', start)
-        # add handlers
-        updater.dispatcher.add_handler(start_handler)
-        updater.start_polling()
-        return render(request, 'integrations/add_telegram.html', ctx)
+        try:
+            updater = Updater(token=token)
+
+            def start(bot, update):
+                bot.send_message(chat_id=update.message.chat_id,
+                                 text=str("Hello, Welcome to healthchecksbot. " + " Your chat ID is " +
+                                          str(update.message.chat_id)))
+            start_handler = CommandHandler('start', start)
+            # add handlers
+            updater.dispatcher.add_handler(start_handler)
+            updater.start_polling()
+        except telegram.error.InvalidToken:
+            return render(request, 'integrations/add_telegram.html', ctx)
     return render(request, 'integrations/add_telegram.html', ctx)
 
 
