@@ -1,7 +1,6 @@
 import uuid
 import re
 from datetime import timedelta
-
 from django.utils import timezone
 from django.contrib import messages
 from django.contrib.auth import login as auth_login
@@ -176,13 +175,27 @@ def profile(request):
             if form.is_valid():
 
                 email = form.cleaned_data["email"]
+                new_checks = []
+                for key in request.POST:
+                    if key.startswith("check-"):
+                        code = key[6:]
+                        try:
+                            check = Check.objects.get(code=code)
+                        except Check.DoesNotExist:
+                            return HttpResponseBadRequest()
+                        if check.user_id != request.team.user.id:
+                            return HttpResponseForbidden()
+                        new_checks.append(check)
                 try:
                     user = User.objects.get(email=email)
                 except User.DoesNotExist:
                     user = _make_user(email)
-
-                profile.invite(user)
-                messages.success(request, "Invitation to %s sent!" % email)
+                my_member = Member.objects.filter(user=user)
+                if my_member or (user.id == request.team.user.id):
+                    messages.info(request, "%s is already a member of the team!" % email)
+                else:
+                    profile.invite(user, new_checks)
+                    messages.success(request, "Invitation to %s sent!" % email)
         elif "remove_team_member" in request.POST:
             form = RemoveTeamMemberForm(request.POST)
             if form.is_valid():
@@ -218,11 +231,15 @@ def profile(request):
 
         badge_urls.append(get_badge_url(username, tag))
 
+    # assigned = set(channel.checks.values_list('code', flat=True).distinct())
+    checks = Check.objects.filter(user=request.team.user).order_by("created")
+
     ctx = {
         "page": "profile",
         "badge_urls": badge_urls,
         "profile": profile,
-        "show_api_key": show_api_key
+        "show_api_key": show_api_key,
+        "checks": checks
     }
 
     return render(request, "accounts/profile.html", ctx)

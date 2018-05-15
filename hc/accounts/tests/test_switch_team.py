@@ -1,5 +1,6 @@
 from hc.test import BaseTestCase
 from hc.api.models import Check
+from hc.accounts.models import Member
 
 
 class SwitchTeamTestCase(BaseTestCase):
@@ -7,11 +8,12 @@ class SwitchTeamTestCase(BaseTestCase):
     def test_it_switches(self):
         c = Check(user=self.alice, name="This belongs to Alice")
         c.save()
-
+        m = Member.objects.get(user=self.bob)
+        m.checks.add(c)
         self.client.login(username="bob@example.org", password="password")
 
         url = "/accounts/switch_team/%s/" % self.alice.username
-        r = self.client.get(url, follow=True)        
+        r = self.client.get(url, follow=True)
         self.assertIn(c, r.context['checks'])
 
 
@@ -26,5 +28,5 @@ class SwitchTeamTestCase(BaseTestCase):
         self.client.login(username="alice@example.org", password="password")
 
         url = "/accounts/switch_team/%s/" % self.alice.username
-        r = self.client.get(url, follow=True)        
+        r = self.client.get(url, follow=True)
         self.assertEqual(r.status_code, 200)
