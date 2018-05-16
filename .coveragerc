@@ -1,0 +1,6 @@
+[run]
+source = hc
+[report]
+omit = 
+    */tests/*
+    */static/ckeditor/*
