@@ -102,6 +102,9 @@
 
                 {% endif %}
 
+                <li {% if page == 'posts' %} class="active" {% endif %}>
+                        <a href="{% url 'blog-view-posts' %}">Blog</a>
+                </li>
 
                 {% if show_pricing %}
                 <li {% if page == 'pricing' %} class="active" {% endif %}>
@@ -196,6 +199,8 @@
     {% compress js %}
     <script src="{% static 'js/jquery-2.1.4.min.js' %}"></script>
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'ckeditor/ckeditor-init.js' %}"></script>
+    <script src="{% static 'ckeditor/ckeditor/ckeditor.js' %}"></script>
     {% endcompress %}
     {% endblock %}
 </body>

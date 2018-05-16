@@ -328,7 +328,6 @@ def channels(request):
     }
     return render(request, "front/channels.html", ctx)
 
-
 def do_add_channel(request, data):
     form = AddChannelForm(data)
     if form.is_valid():

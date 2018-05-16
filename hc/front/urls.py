@@ -1,6 +1,7 @@
 from django.conf.urls import include, url
 
 from hc.front import views
+from hc.blog import views as blog_views
 
 check_urls = [
     url(r'^name/$', views.update_name, name="hc-update-name"),
@@ -28,9 +29,8 @@ channel_urls = [
     url(r'^([\w-]+)/remove/$', views.remove_channel, name="hc-remove-channel"),
     url(r'^([\w-]+)/verify/([\w-]+)/$', views.verify_email,
         name="hc-verify-email"),
-
-
 ]
+
 
 urlpatterns = [
     url(r'^$', views.index, name="hc-index"),

@@ -34,12 +34,17 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'compressor',
     'djmail',
+    'ckeditor',
+    'ckeditor_uploader',
+    'widget_tweaks',
+    'taggit',
 
     'hc.accounts',
     'hc.api',
     'hc.front',
     'hc.payments',
-    'hc.help'
+    'hc.help',
+    'hc.blog'
 )
 
 MIDDLEWARE = (
@@ -144,6 +149,10 @@ STATICFILES_FINDERS = (
 )
 COMPRESS_OFFLINE = True
 
+PROJECT_ROOT_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir))
+MEDIA_ROOT = os.path.join(PROJECT_ROOT_PATH, 'media/')
+MEDIA_URL = '/media/'
+
 EMAIL_BACKEND = "sendgrid_backend.SendgridBackend"
 SENDGRID_API_KEY = os.environ.get("SENDGRID_API_KEY")
 SENDGRID_SANDBOX_MODE_IN_DEBUG = False
@@ -167,3 +176,30 @@ if os.path.exists(os.path.join(BASE_DIR, "hc/local_settings.py")):
 else:
     warnings.warn("local_settings.py not found, using defaults")
 
+####################################
+    ##  CKEDITOR CONFIGURATION ##
+####################################
+
+CKEDITOR_JQUERY_URL = 'https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js'
+
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': None,
+        'height':200,
+        'width': 780
+    }
+}
+
+CKEDITOR_UPLOAD_PATH = "uploads/"
+
+CKEDITOR_BASEPATH = "hc/static/ckeditor/ckeditor"
+
+CKEDITOR_RESTRICT_BY_USER = True
+
+CKEDITOR_ALLOW_NONIMAGE_FILES = False
+
+####################################
+    ##  TAGGIT CONFIGURATION ##
+####################################
+
+TAGGIT_CASE_INSENSITIVE = True

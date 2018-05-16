@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load compress humanize staticfiles hc_extras widget_tweaks %}
+
+{% block title %}Blog - healthchecks.io{% endblock %}
+
+
+{% block content %}
+{% if user.is_authenticated %}
+<div class="row">
+  <div class="col-sm-2">
+
+  </div>
+  <div class="col-sm-8">
+    <form class="form-inline" method="POST">
+      <h2>New Category</h2>
+      <br/>
+
+      {% csrf_token %}
+
+      {% for field in form.visible_fields %}
+        <div class="form-group">
+          {{ field.label_tag }}
+
+          {% if form.is_bound %}
+              {% render_field field class="form-control" %}
+          {% else %}
+            {% render_field field class="form-control" %}
+          {% endif %}
+
+        </div>
+      {% endfor %}
+      
+      <button type="submit" class="save btn btn-success">Save</button>
+    </form>
+  </div>
+
+  <div class="col-sm-2">
+
+  </div>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+{% compress js %}
+<script src="{% static 'js/jquery-2.1.4.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<script src="{% static 'js/channels.js' %}"></script>
+{% endcompress %}
+{% endblock %}

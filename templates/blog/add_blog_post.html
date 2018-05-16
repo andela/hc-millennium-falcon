@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% load compress humanize staticfiles hc_extras widget_tweaks %}
+
+{% block title %}Blog - healthchecks.io{% endblock %}
+
+
+{% block content %}
+
+{% if user.is_authenticated %}
+  <div class="row">
+  <div class="col-sm-2"></div>
+  <div class="col-sm-8">
+  <form class="form-horizontal" method="POST">
+      <div class="row">
+          <div class="col-sm-8">
+            <h2>New Post</h2>
+          </div>
+
+          <div class="col-sm-2" style="text-align: right;">
+              <a href="{{request.META.HTTP_REFERER}}" class="save btn btn-default">
+                Cancel
+              </a>
+          </div>
+
+          <div class="col-sm-2" style="text-align: left;">
+              <button type="submit" class="save btn btn-success">
+                Save
+              </button>
+          </div>
+      </div>
+      <br/>
+
+      {% csrf_token %} 
+      {% for field in form.visible_fields %}
+          <div class="form-group">
+            {{ field.label_tag }}
+
+            {% if form.is_bound %}
+                {% render_field field class="form-control" %}
+            {% else %}
+              {% render_field field class="form-control" %}
+            {% endif %}
+          </div>
+      {% endfor %}
+  </form>
+  </div>
+  <div class="col-sm-2"></div>
+  </div>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+{% compress js %}
+<script src="{% static 'js/jquery-2.1.4.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<script src="{% static 'js/channels.js' %}"></script>
+{% endcompress %}
+<script src="{% static 'ckeditor/ckeditor-init.js' %}"></script>
+<script src="{% static 'ckeditor/ckeditor/ckeditor.js' %}"></script>
+{% endblock %}
