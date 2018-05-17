@@ -121,7 +121,7 @@ if os.environ.get("DB") == "mysql":
         }
     }
 
-DATABASES['default'] = dj_database_url.config(default="postgres://postgres:@localhost:/hc")
+DATABASES['default'] = dj_database_url.config(default="postgres://postgres:1234567890@localhost:/hc")
 
 LANGUAGE_CODE = 'en-us'
 

@@ -130,6 +130,22 @@
                             </div>
                         </div>
 
+                        <div class="form-group">
+                            <label for="select-check-priority" class="col-sm-2 control-label">Priority</label>
+                            <div class="col-sm-9">
+                                <select name="priority" class="form-control" id="select-priority">
+                                    <option value="0">Normal</option>
+                                    <option value="-1">Low</option>
+                                    <option value="-2">Lowest</option>
+                                    <option value="1">High</option>
+                                    <option value="2">Emergency</option>
+                                </select>
+                            <span class="help-block">
+                                    Default priority is set to Normal, change to another priority
+                            </span>
+                           </div>
+                        </div>
+
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
@@ -335,7 +351,7 @@
             </div>
         </div>
     </div>
-</div>
+</div>                 
 
 <form id="pause-form" method="post">
     {% csrf_token %}
