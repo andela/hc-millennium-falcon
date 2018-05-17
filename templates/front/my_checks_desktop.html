@@ -3,6 +3,7 @@
     <tr>
         <th></th>
         <th class="th-name">Name</th>
+        <th>Priority</th>
         <th>Ping URL</th>
         <th class="th-period">
             Period <br />
@@ -36,16 +37,39 @@
         </td>
         <td class="name-cell">
             <div data-name="{{ check.name }}"
-                    data-tags="{{ check.tags }}"
-                    data-department="{{ check.department }}"
-                    data-url="{% url 'hc-update-name' check.code %}"
-                    class="my-checks-name {% if not check.name %}unnamed{% endif %}">
+                data-tags="{{ check.tags }}"
+                data-department="{{ check.department }}"
+                data-url="{% url 'hc-update-name' check.code %}"
+                class="my-checks-name {% if not check.name %}unnamed{% endif %}">
                 <div>{{ check.name|default:"unnamed" }}</div>
                 {% for tag in check.tags_list %}
                 <span class="label label-tag">{{ tag }}</span>
                 {% endfor %}
                 <br><br><span class="label label-department">{{ check.department }}</span>
             </div>
+        </td>
+        <td class="priority-cell">
+            {% if check.priority == "lowest" %}
+                <span class="label label-default">
+                     {{check.priority}}
+                </span>
+            {% elif check.priority == "low"  %}
+                <span class="label label-info">
+                    {{check.priority}}
+                </span>
+            {% elif check.priority == "normal"  %}
+                <span class="label label-primary">
+                    {{check.priority}}
+                </span>
+            {% elif check.priority == "high"  %}
+                <span class="label label-warning">
+                    {{check.priority}}
+                </span>
+            {% elif check.priority == "emergency"  %}
+                <span class="label label-danger">
+                    {{check.priority}}
+                </span>
+           {% endif %}
         </td>
         <td class="url-cell">
             <span class="my-checks-url">

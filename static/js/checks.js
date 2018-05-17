@@ -240,8 +240,7 @@ $(function () {
         var url = e.target.getAttribute("data-url");
         $("#pause-form").attr("action", url).submit();
         return false;
-    });
-
+    });    
 
     $(".usage-examples").click(function(e) {
         var a = e.target;
@@ -254,7 +253,6 @@ $(function () {
         $("#show-usage-modal").modal("show");
         return false;
     });
-
 
     var clipboard = new Clipboard('button.copy-link');
     $("button.copy-link").mouseout(function(e) {
