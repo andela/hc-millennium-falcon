@@ -16,7 +16,7 @@ import json, os
 from django.utils.crypto import get_random_string
 from django.utils.six.moves.urllib.parse import urlencode
 from hc.api.decorators import uuid_or_400
-from hc.api.models import DEFAULT_NAG, DEFAULT_GRACE, DEFAULT_TIMEOUT, Channel, Check, Ping
+from hc.api.models import DEFAULT_NAG, DEFAULT_GRACE, DEFAULT_TIMEOUT, PO_PRIORITIES, Channel, Check, Ping
 from hc.front.forms import (AddChannelForm, AddWebhookForm, NameTagsForm,
                             TimeoutForm)
 from hc.accounts.models import Member
@@ -40,6 +40,13 @@ def my_checks(request):
         member_checks = [member for member in members if member.user == request.user]
         q = member_checks[0].checks.all()
         checks = list(q)
+    checks_list  = list(Check.objects.filter(user=request.team.user))
+    checks = []
+    for x in range(-2, 3):
+        for check in checks_list:
+            if check.priority == PO_PRIORITIES[x]:
+                checks.append(check)
+    checks.reverse()           
     counter = Counter()
     nag_tags, down_tags, grace_tags, departments = set(), set(), set(), set()
     for check in checks:
@@ -70,7 +77,7 @@ def my_checks(request):
         "nag_tags": nag_tags,
         "down_tags": down_tags,
         "grace_tags": grace_tags,
-        "ping_endpoint": settings.PING_ENDPOINT
+        "ping_endpoint": settings.PING_ENDPOINT,
     }
 
     return render(request, "front/my_checks.html", ctx)
@@ -80,8 +87,14 @@ def my_checks(request):
 def my_failed_checks(request):
     """Function to get all failed checks"""
 
-    checks = list(Check.objects.filter(user=request.team.user).order_by("created"))
-    failed_checks = [check for check in checks if check.get_status() == "down"]
+    checks = list(Check.objects.filter(user=request.team.user))
+    failed_checks_list = [check for check in checks if check.get_status() == "down"]
+    failed_checks = []
+    for x in range(-2, 3):
+        for check in failed_checks_list:
+            if check.priority == PO_PRIORITIES[x]:
+                failed_checks.append(check)
+    failed_checks.reverse()  
 
     ctx = {
         "page": "failed_checks",
@@ -182,6 +195,8 @@ def update_name(request, code):
         check.name = form.cleaned_data["name"]
         check.tags = form.cleaned_data["tags"]
         check.department = form.cleaned_data["department"]
+        priority_id = int(form.cleaned_data["priority"])
+        check.priority = PO_PRIORITIES[priority_id]
         check.save()
 
     return redirect("hc-checks")
@@ -234,7 +249,6 @@ def remove_check(request, code):
     check.delete()
 
     return redirect("hc-checks")
-
 
 @login_required
 @uuid_or_400

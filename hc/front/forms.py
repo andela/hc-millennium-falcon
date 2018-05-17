@@ -6,6 +6,7 @@ class NameTagsForm(forms.Form):
     name = forms.CharField(max_length=100, required=False)
     tags = forms.CharField(max_length=500, required=False)
     department = forms.CharField(max_length=50, required=False)
+    priority = forms.IntegerField(min_value=-2, max_value=2, required=False)
 
     def clean_tags(self):
         l = []
@@ -23,7 +24,6 @@ class TimeoutForm(forms.Form):
     grace = forms.IntegerField(min_value=60, max_value=31104000)
     nag_interval = forms.IntegerField(min_value=60, max_value=3600)
     nag_mode = forms.BooleanField(required=False)
-
 
 class AddChannelForm(forms.ModelForm):
 
