@@ -29,7 +29,7 @@ Pillow==5.1.0
 premailer==3.2.0
 psycopg2==2.7.4
 psycopg2-binary==2.7.4
-PyJWT==1.6.1
+PyJWT==2.4.0
 PySocks==1.6.8
 python-dateutil==2.7.2
 python-http-client==3.0.0
